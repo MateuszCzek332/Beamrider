@@ -1,0 +1,19 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    /* border: 1px solid red; */
+    background-color: black;
+    margin: 0;
+    padding: 0;
+}
+
+#fps {
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+}

@@ -11,7 +11,7 @@ export class Game {
         Game.canvas.width = window.innerWidth
         Game.canvas.height = window.innerHeight - 4
         this.c = Game.canvas.getContext('2d')
-        this.bgManager = new BackgroundManager(6, 120, 1.01, 30)
+        this.bgManager = new BackgroundManager(6, 115, 1.01, 27)
         this.createFPS()
         this.animate()
 

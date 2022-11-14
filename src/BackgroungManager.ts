@@ -1,5 +1,6 @@
 import { Line } from "./Line";
 import { Game } from './app'
+import { Star } from "./star";
 
 export class BackgroundManager {
     state: number = 0;
@@ -16,6 +17,7 @@ export class BackgroundManager {
     framesCounter: number;
     linesSlow: number
     time: any;
+    starsTab: Star[][] = [];
     constructor(linesNumber: number, linesSpawnPoint: number, speed: number, framesDiff: number) {
         this.linesNumber = linesNumber;
         this.linesSpawnPoint = linesSpawnPoint;
@@ -57,10 +59,12 @@ export class BackgroundManager {
 
     init = () => {
         this.createLines()
+        this.createStars()
     }
 
     update = (c: CanvasRenderingContext2D) => {
         this.updateLines(c)
+        this.drawStars(c)
     }
 
     createLines = () => {
@@ -71,7 +75,37 @@ export class BackgroundManager {
         }
     }
 
+    createStars = () => {
+
+        let wd = innerWidth / 2.5
+        let w = -innerWidth / 2.5
+        for (let i = 0, r = 54; i < 7; i++, r -= 18) {
+            this.starsTab[i] = []
+            let h = this.botBounty
+            let j = 0
+            while (h > this.linesSpawnPoint) {
+                let s = new Star(w / 2 - 7 + j * r, h)
+                this.starsTab[i].push(s)
+                h -= 55
+                j++
+            }
+            if (i == 0 || i == 5)
+                w += 1.5 * wd
+            else
+                w += wd
+        }
+    }
+
+    drawStars = (c: CanvasRenderingContext2D) => {
+        this.starsTab.forEach(el => {
+            el.forEach(elm => {
+                elm.draw(c)
+            })
+        });
+    }
+
     updateLines = (c: CanvasRenderingContext2D) => {
+
         this.headerline.draw(c)
         if (this.state == 1)
             this.frame++

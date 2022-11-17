@@ -1,4 +1,5 @@
 import { Game } from "./app";
+import { Bullet } from "./Bullet";
 
 export class PlayerController {
     canMove: boolean;
@@ -11,8 +12,9 @@ export class PlayerController {
     height: number;
     image: HTMLImageElement;
     frame: number = 0;
-    speed: number = 30;
+    speed: number = 26;
     xwidth: number = 0;
+    bullet: Bullet = null;
     constructor(h: number) {
         this.height = h
         this.wd = innerWidth / 5
@@ -72,10 +74,23 @@ export class PlayerController {
             }
         }
 
+        this.drawBullet(c)
+
+    }
+
+    drawBullet = (c: CanvasRenderingContext2D) => {
+        if (this.bullet == null)
+            return;
+
+        this.bullet.update(c)
+        if (this.bullet.y < 180)
+            this.bullet = null;
+
     }
 
     shoot = () => {
-        console.log('shoot')
+        if (this.bullet == null)
+            this.bullet = new Bullet(this.pos, this.height)
     }
 
     start = () => {

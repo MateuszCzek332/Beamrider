@@ -1,9 +1,9 @@
+import { Game } from "./app";
 import { Line } from "./Line";
-import { Game } from './app'
-import { Star } from "./star";
+// import { Game } from './app'
+import { Star } from "./Star";
 
 export class BackgroundManager {
-    state: number = 0;
     linesSpawnPoint: number;
     headerline: Line;
     lines: Line[] = []
@@ -18,43 +18,43 @@ export class BackgroundManager {
     linesSlow: number
     time: any;
     starsTab: Star[][] = [];
-    constructor(linesNumber: number, linesSpawnPoint: number, speed: number, framesDiff: number) {
+    startPlayer: any;
+    constructor(linesNumber: number, linesSpawnPoint: number, speed: number, framesDiff: number, startPlayer: any) {
         this.linesNumber = linesNumber;
         this.linesSpawnPoint = linesSpawnPoint;
         this.normalLinesSpeed = speed;
         this.framesDiff = framesDiff;
         this.speedLimit = (this.normalLinesSpeed - 1) * 6
         this.frame = 0
+        this.startPlayer = () => { startPlayer() }
         console.log(this.speedLimit)
         this.init()
 
-        document.addEventListener("keydown", (event) => {
-            // console.log(event.keyCode)
-            if (event.isComposing || event.keyCode === 83) {
-                this.state = 1
-                this.currentlinesSpeed = this.normalLinesSpeed
-            }
-            else if (event.isComposing || event.keyCode === 68) {
-                this.state = 0
-                console.log(this.frame)
-                this.currentlinesSpeed = 1
-            }
-            else if (event.isComposing || event.keyCode === 65) {
-                this.state = 2
-                this.time = Date.now()
-                this.currentlinesSpeed = 1
-            }
-            else if (event.isComposing || event.keyCode === 70) {
-                this.state = 4
-                this.linesSlow = 0.0001
-                this.framesCounter = 2 * framesDiff - framesDiff
-                this.linesSlow = (this.normalLinesSpeed - 1) / this.framesCounter
-                console.log(this.frame, this.framesCounter)
-                // this.time = Date.now()
-                this.currentlinesSpeed = this.normalLinesSpeed
-                // this.currentlinesSpeed = this.normalLinesSpeed
-            }
-        });
+    }
+
+    pause = () => {
+        this.currentlinesSpeed = 1
+    }
+
+
+    unpause = () => {
+        this.currentlinesSpeed = this.normalLinesSpeed
+    }
+
+
+    start = () => {
+        this.frame = 0;
+        this.currentlinesSpeed = 1 / this.normalLinesSpeed
+    }
+
+    stop = () => {
+        this.linesSlow = 0.0001
+        this.framesCounter = 2 * this.framesDiff - this.frame
+        this.linesSlow = (this.normalLinesSpeed - 1) / this.framesCounter
+        console.log(this.frame, this.framesCounter)
+        // this.time = Date.now()
+        this.currentlinesSpeed = this.normalLinesSpeed
+        // this.currentlinesSpeed = this.normalLinesSpeed
     }
 
     init = () => {
@@ -79,20 +79,24 @@ export class BackgroundManager {
 
         let wd = innerWidth / 2.5
         let w = -innerWidth / 2.5
-        for (let i = 0, r = 54; i < 7; i++, r -= 18) {
+        let gx = 1
+        for (let i = 0, r = 54, g = -3; i < 7; i++, r -= 18) {
             this.starsTab[i] = []
             let h = this.botBounty
             let j = 0
-            while (h > this.linesSpawnPoint) {
-                let s = new Star(w / 2 - 7 + j * r, h)
+            while (h + g * j > this.linesSpawnPoint) {
+                let s = new Star(w / 2 - 7 + j * r, h + g * j)
                 this.starsTab[i].push(s)
-                h -= 55
+                h -= 52
                 j++
             }
             if (i == 0 || i == 5)
                 w += 1.5 * wd
             else
                 w += wd
+            g += gx
+            if (g == 0)
+                gx = -1
         }
     }
 
@@ -107,14 +111,13 @@ export class BackgroundManager {
     updateLines = (c: CanvasRenderingContext2D) => {
 
         this.headerline.draw(c)
-        if (this.state == 1)
-            this.frame++
+        this.frame++
         for (let i = 0; i < this.lines.length; i++) {
             let l = this.lines[i]
             c.fillStyle = "rgb(56,104,144)";
             c.fillRect(l.x, l.y, l.width, l.height)
             l.y *= this.currentlinesSpeed
-            switch (this.state) {
+            switch (Game.state) {
                 case 1:
                     if (l.y >= this.botBounty) {
                         l.y = this.linesSpawnPoint
@@ -138,24 +141,25 @@ export class BackgroundManager {
 
         }
 
-        switch (this.state) {
+        switch (Game.state) {
             case 2:
-                this.currentlinesSpeed -= 0.0005
-                if (this.currentlinesSpeed <= this.normalLinesSpeed - this.speedLimit) {
-                    console.log('back')
-                    console.log(Date.now() - this.time)
-                    this.state = 3
+                this.currentlinesSpeed *= 0.9995
+                console.log(this.frame)
+                if (this.frame == 3 * this.framesDiff) {
+                    this.frame = 0
+                    // console.log('back')
+                    // console.log(Date.now() - this.time)
+                    Game.state = 3
                     this.currentlinesSpeed = 1 / this.currentlinesSpeed
-                    // this.botBounty = this.linesSpawnPoint * Math.pow(this.normalLinesSpeed, this.linesNumber * this.framesDiff)
                 }
-                // this.botBounty = this.linesSpawnPoint * Math.pow(1 / this.currentlinesSpeed, this.linesNumber * this.framesDiff)
                 break
             case 3:
-                this.currentlinesSpeed -= 0.0005
-                if (this.currentlinesSpeed <= this.normalLinesSpeed) {
-                    console.log('normal')
-                    console.log(Date.now() - this.time)
-                    this.state = 1
+                this.currentlinesSpeed *= 0.9995
+                if (this.frame == 3 * this.framesDiff) {
+                    // console.log('normal')
+                    // console.log(Date.now() - this.time)
+                    Game.state = 1
+                    this.startPlayer()
                     this.currentlinesSpeed = this.normalLinesSpeed
                 }
                 break
@@ -165,13 +169,13 @@ export class BackgroundManager {
                 if (this.currentlinesSpeed <= 1) {
                     this.lines = []
                     this.createLines()
-                    this.state = 0
+                    Game.state = 0
                     this.currentlinesSpeed = 1
                     console.log(this.framesCounter)
                 }
                 break
         }
-        if (this.frame == this.framesDiff)
+        if (Game.state == 1 && this.frame == this.framesDiff)
             this.frame = 0
 
     }

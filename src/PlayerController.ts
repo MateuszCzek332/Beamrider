@@ -24,7 +24,7 @@ export class PlayerController {
         // console.log(this.image.width)
         this.width = innerWidth / 2 + this.pos * this.wd - 151 / 2 + this.pos * 10
         document.addEventListener("keydown", (event) => {
-            // console.log(event.keyCode)
+            console.log(event.keyCode)
             if (this.canMove) {
                 if (event.isComposing || event.keyCode === 37) {
                     if (this.pos > -2) {
@@ -40,7 +40,11 @@ export class PlayerController {
                 }
                 else if (event.isComposing || event.keyCode === 32) {
                     if (this.xwidth == 0)
-                        this.shoot()
+                        this.shoot(1)
+                }
+                else if (event.isComposing || event.keyCode === 38) {
+                    if (this.xwidth == 0)
+                        this.shoot(2)
                 }
                 // this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2 + this.pos * 12
             }
@@ -56,7 +60,7 @@ export class PlayerController {
         if (Game.state != 1) {
             this.frame++
             if (this.frame == 20) {
-                this.changeColor()
+                this.changePlayerColor()
                 this.frame = 0
             }
         }
@@ -83,14 +87,13 @@ export class PlayerController {
             return;
 
         this.bullet.update(c)
-        if (this.bullet.y < 180)
+        if (this.bullet.state == 0)
             this.bullet = null;
-
     }
 
-    shoot = () => {
+    shoot = (type: number) => {
         if (this.bullet == null)
-            this.bullet = new Bullet(this.pos, this.height)
+            this.bullet = new Bullet(this.pos, this.height, type)
     }
 
     start = () => {
@@ -99,7 +102,7 @@ export class PlayerController {
         this.color = 1
     }
 
-    changeColor = () => {
+    changePlayerColor = () => {
         if (this.color == 1) {
             this.image.src = "./gfx/player2.PNG";
             this.color = 2

@@ -3,19 +3,29 @@ export class Bullet {
     x: number;
     y: number;
     speed: number = 20;
+    type: number;
+    state: number = 1;
     width: number = innerWidth;
     height: number = 10;
     spawnPos: number;
     bounty: number = 150;
     r: number;
     xwidth: number;
-    constructor(posX: number, y: number,) {
+    constructor(posX: number, y: number, type: number) {
         this.image = new Image;
-        this.image.src = "./gfx/bullet1.PNG";
+        this.type = type;
         let wd = innerWidth / 5
         this.r = posX * -6.5
-        this.y = y - 35;
-        this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 45.5
+        if (type == 1) {
+            this.image.src = "./gfx/bullet1.PNG";
+            this.y = y - 35;
+            this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 45.5
+        }
+        else {
+            this.image.src = "./gfx/bullet2.PNG";
+            this.y = y - 27;
+            this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 25.5
+        }
     }
 
     draw = (c: CanvasRenderingContext2D) => {
@@ -26,5 +36,28 @@ export class Bullet {
         this.draw(c)
         this.y -= this.speed
         this.x += this.r
+
+        if (this.type == 1) {
+            if (this.y < 180)
+                this.state = 0;
+        }
+        else if (this.type == 2) {
+            if (this.state == 1 && this.y < 400) {
+                this.image.src = "./gfx/bullet2-2.PNG";
+                this.x += 9.5
+                this.state = 2
+
+            }
+            else if (this.state == 2 && this.y < 200) {
+                this.image.src = "./gfx/bullet2-3.PNG";
+                this.x += 11.5
+                this.state = 3
+
+            }
+            if (this.y < 70)
+                this.state = 0;
+        }
+
+
     }
 }

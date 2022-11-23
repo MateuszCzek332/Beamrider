@@ -17,12 +17,12 @@ export class Bullet {
         let wd = innerWidth / 5
         this.r = posX * -6.5
         if (type == 1) {
-            this.image.src = "./gfx/bullet1.PNG";
+            this.image.src = "./gfx/bullets/player1/bullet1.PNG";
             this.y = y - 35;
             this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 45.5
         }
         else {
-            this.image.src = "./gfx/bullet2.PNG";
+            this.image.src = "./gfx/bullets/player2/bullet2.PNG";
             this.y = y - 27;
             this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 25.5
         }
@@ -43,13 +43,13 @@ export class Bullet {
         }
         else if (this.type == 2) {
             if (this.state == 1 && this.y < 400) {
-                this.image.src = "./gfx/bullet2-2.PNG";
+                this.image.src = "./gfx/bullets/player2/bullet2-2.PNG";
                 this.x += 9.5
                 this.state = 2
 
             }
             else if (this.state == 2 && this.y < 200) {
-                this.image.src = "./gfx/bullet2-3.PNG";
+                this.image.src = "./gfx/bullets/player2/bullet2-3.PNG";
                 this.x += 11.5
                 this.state = 3
 

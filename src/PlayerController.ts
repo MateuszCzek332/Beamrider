@@ -15,12 +15,16 @@ export class PlayerController {
     speed: number = 26;
     xwidth: number = 0;
     bullet: Bullet = null;
+    ammo: number;
+    hp: number
     constructor(h: number) {
-        this.height = h
+        this.height = h - 20
         this.wd = innerWidth / 5
         this.pos = 0
+        this.ammo = 3;
+        this.hp = 2;
         this.image = new Image;
-        this.image.src = "./gfx/player1.PNG";
+        this.image.src = "./gfx/player/player1.PNG";
         // console.log(this.image.width)
         this.width = innerWidth / 2 + this.pos * this.wd - 151 / 2 + this.pos * 10
         document.addEventListener("keydown", (event) => {
@@ -46,6 +50,9 @@ export class PlayerController {
                     if (this.xwidth == 0)
                         this.shoot(2)
                 }
+                // else if (event.isComposing || event.keyCode === 86) {
+                //     this.hp--
+                // }
                 // this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2 + this.pos * 12
             }
         });
@@ -92,23 +99,31 @@ export class PlayerController {
     }
 
     shoot = (type: number) => {
-        if (this.bullet == null)
-            this.bullet = new Bullet(this.pos, this.height, type)
+        if (this.bullet == null) {
+            if (type == 2 && this.ammo > 0) {
+                console.log(this.ammo)
+                this.bullet = new Bullet(this.pos, this.height, 2)
+                this.ammo--
+            }
+            else if (type == 1)
+                this.bullet = new Bullet(this.pos, this.height, 1)
+
+        }
     }
 
     start = () => {
         this.canMove = true
-        this.image.src = "./gfx/player1.PNG"
+        this.image.src = "./gfx/player/player1.PNG"
         this.color = 1
     }
 
     changePlayerColor = () => {
         if (this.color == 1) {
-            this.image.src = "./gfx/player2.PNG";
+            this.image.src = "./gfx/player/player2.PNG";
             this.color = 2
         }
         else {
-            this.image.src = "./gfx/player1.PNG"
+            this.image.src = "./gfx/player/player1.PNG"
             this.color = 1
         }
     }

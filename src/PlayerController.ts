@@ -25,8 +25,9 @@ export class PlayerController {
         this.hp = 2;
         this.image = new Image;
         this.image.src = "./gfx/player/player1.PNG";
-        // console.log(this.image.width)
-        this.width = innerWidth / 2 + this.pos * this.wd - 151 / 2 + this.pos * 10
+        this.image.onload = () => {
+            this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2
+        }
         document.addEventListener("keydown", (event) => {
             console.log(event.keyCode)
             if (this.canMove) {

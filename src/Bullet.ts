@@ -15,7 +15,7 @@ export class Bullet {
         this.image = new Image;
         this.type = type;
         let wd = innerWidth / 5
-        this.r = posX * -6.5
+        this.r = posX * -7.5
         if (type == 1) {
             this.image.src = "./gfx/bullets/player1/bullet1.PNG";
             this.y = y - 35;

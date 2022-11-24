@@ -1,6 +1,7 @@
 import { PlayerController } from "./PlayerController";
 import { BackgroundManager } from "./BackgroungManager"
 import { Ui } from "./Ui";
+import { LevelController } from "./LevelController";
 
 export class Game {
     //data
@@ -10,6 +11,7 @@ export class Game {
     //controllers
     bgManager: BackgroundManager;
     playerController: PlayerController;
+    lvlController: LevelController;
     ui: Ui;
     //liczenie klatek
     fps: number = 0;
@@ -21,6 +23,7 @@ export class Game {
         this.c = Game.canvas.getContext('2d')
         this.playerController = new PlayerController(630)
         this.bgManager = new BackgroundManager(6, 115, 1.01, 27, this.playerController.start)
+        this.lvlController = new LevelController()
         this.ui = new Ui()
         this.createFPS()
         this.animate()
@@ -35,6 +38,8 @@ export class Game {
         this.bgManager.update(this.c)
         this.playerController.update(this.c)
         this.ui.update(this.c, this.playerController.ammo, this.playerController.hp)
+        this.lvlController.update(this.c)
+
     }
 
     onKeyDown = (event: KeyboardEvent) => {

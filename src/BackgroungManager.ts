@@ -80,7 +80,7 @@ export class BackgroundManager {
         let wd = innerWidth / 2.5
         let w = -innerWidth / 2.5
         let gx = 1
-        for (let i = 0, r = 54, g = -3; i < 7; i++, r -= 18) {
+        for (let i = 0, r = 60, g = -3; i < 7; i++, r -= 20) {
             this.starsTab[i] = []
             let h = this.botBounty
             let j = 0

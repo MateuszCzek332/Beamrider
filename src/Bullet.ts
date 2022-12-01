@@ -28,6 +28,11 @@ export class Bullet {
         }
     }
 
+    stop = () => {
+        this.speed = 0;
+        this.r = 0;
+    }
+
     draw = (c: CanvasRenderingContext2D) => {
         c.drawImage(this.image, this.x, this.y);
     }

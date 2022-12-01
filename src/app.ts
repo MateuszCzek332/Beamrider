@@ -37,8 +37,9 @@ export class Game {
         this.fps++
         this.bgManager.update(this.c)
         this.playerController.update(this.c)
+        this.lvlController.update(this.c, this.playerController)
         this.ui.update(this.c, this.playerController.ammo, this.playerController.hp)
-        this.lvlController.update(this.c)
+
 
     }
 

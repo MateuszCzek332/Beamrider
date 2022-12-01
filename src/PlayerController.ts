@@ -29,7 +29,6 @@ export class PlayerController {
             this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2
         }
         document.addEventListener("keydown", (event) => {
-            console.log(event.keyCode)
             if (this.canMove) {
                 if (event.isComposing || event.keyCode === 37) {
                     if (this.pos > -2) {

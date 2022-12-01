@@ -5,13 +5,18 @@ export abstract class Enemy {
     y: number;
     xd: number;
     yd: number;
+    width: number;
+    height: number;
     speed: number = 3;
+    state: number = 1;
     constructor(src: string) {
         this.image = new Image;
         this.image.src = src
         this.image.onload = () => {
             this.xd = -this.image.width / 2
             this.yd = -this.image.height
+            this.width = this.image.width;
+            this.width = this.image.height;
         }
 
     }
@@ -20,7 +25,4 @@ export abstract class Enemy {
         c.drawImage(this.image, this.x + this.xd, this.y + this.yd);
     }
 
-    update = (c: CanvasRenderingContext2D) => {
-
-    }
 }

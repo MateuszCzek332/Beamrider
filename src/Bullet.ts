@@ -2,39 +2,39 @@ export class Bullet {
     image: HTMLImageElement;
     x: number;
     y: number;
+    xd: number;
+    yd: number;
+    width: number;
+    height: number;
     speed: number = 20;
     type: number;
     state: number = 1;
-    width: number = innerWidth;
-    height: number = 10;
     spawnPos: number;
     bounty: number = 150;
     r: number;
-    xwidth: number;
     constructor(posX: number, y: number, type: number) {
-        this.image = new Image;
         this.type = type;
-        let wd = innerWidth / 5
-        this.r = posX * -7.5
-        if (type == 1) {
+        this.x = innerWidth / 2 + posX * (innerWidth / 5)
+        this.y = y
+        this.r = posX * -7
+        this.image = new Image;
+        if (type == 1)
             this.image.src = "./gfx/bullets/player1/bullet1.PNG";
-            this.y = y - 35;
-            this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 45.5
-        }
-        else {
+        else
             this.image.src = "./gfx/bullets/player2/bullet2.PNG";
-            this.y = y - 27;
-            this.x = this.width = innerWidth / 2 + posX * wd + posX * 12 - 25.5
-        }
-    }
 
-    stop = () => {
-        this.speed = 0;
-        this.r = 0;
+        this.image.onload = () => {
+            this.xd = -this.image.width / 2
+            this.yd = -this.image.height
+            this.width = this.image.width;
+            this.height = this.image.height;
+        }
+
+
     }
 
     draw = (c: CanvasRenderingContext2D) => {
-        c.drawImage(this.image, this.x, this.y);
+        c.drawImage(this.image, this.x + this.xd, this.y + this.yd);
     }
 
     update = (c: CanvasRenderingContext2D) => {
@@ -49,20 +49,23 @@ export class Bullet {
         else if (this.type == 2) {
             if (this.state == 1 && this.y < 400) {
                 this.image.src = "./gfx/bullets/player2/bullet2-2.PNG";
-                this.x += 9.5
                 this.state = 2
 
             }
             else if (this.state == 2 && this.y < 200) {
                 this.image.src = "./gfx/bullets/player2/bullet2-3.PNG";
-                this.x += 11.5
                 this.state = 3
-
             }
             if (this.y < 70)
                 this.state = 0;
         }
 
 
+    }
+
+    stop = () => {
+        this.speed = 0;
+        this.r = 0;
+        this.state = 0;
     }
 }

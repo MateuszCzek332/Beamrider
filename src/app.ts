@@ -47,6 +47,7 @@ export class Game {
             Game.state = 1
             this.bgManager.unpause()
             this.playerController.start()
+            this.lvlController.startLv()
         }
         else if (event.isComposing || event.keyCode === 68) {
             Game.state = 0

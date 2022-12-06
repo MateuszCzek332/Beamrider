@@ -43,13 +43,4 @@ export class Ufo extends Enemy {
 
     }
 
-    die = () => {
-        this.speed = 0
-        this.state = 0;
-    }
-
-    checkColision = (bullet: Bullet) => {
-        return bullet != null && bullet.y < this.y && bullet.x < this.x + this.xd + this.width && bullet.x + this.width > this.x + this.xd
-    }
-
 }

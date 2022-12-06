@@ -98,9 +98,8 @@ export class PlayerController {
     shoot = (type: number) => {
         if (this.bullet == null) {
             if (type == 2 && this.ammo > 0) {
-                console.log(this.ammo)
                 this.bullet = new Bullet(this.pos, this.height, 2)
-                this.ammo--
+                // this.ammo--
             }
             else if (type == 1)
                 this.bullet = new Bullet(this.pos, this.height, 1)

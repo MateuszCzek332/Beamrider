@@ -27,7 +27,7 @@ export class BackgroundManager {
         this.speedLimit = (this.normalLinesSpeed - 1) * 6
         this.frame = 0
         this.startPlayer = () => { startPlayer() }
-        console.log(this.speedLimit)
+        // console.log(this.speedLimit)
         this.init()
 
     }
@@ -47,11 +47,16 @@ export class BackgroundManager {
         this.currentlinesSpeed = 1 / this.normalLinesSpeed
     }
 
+    reset = () => {
+        this.lines = []
+        this.createLines()
+    }
+
     stop = () => {
         this.linesSlow = 0.0001
         this.framesCounter = 2 * this.framesDiff - this.frame
-        this.linesSlow = (this.normalLinesSpeed - 1) / this.framesCounter
-        console.log(this.frame, this.framesCounter)
+        // this.linesSlow = (this.normalLinesSpeed - 1) / this.framesCounter
+        // console.log(this.frame, this.framesCounter)
         // this.time = Date.now()
         this.currentlinesSpeed = this.normalLinesSpeed
         // this.currentlinesSpeed = this.normalLinesSpeed
@@ -144,7 +149,7 @@ export class BackgroundManager {
         switch (Game.state) {
             case 2:
                 this.currentlinesSpeed *= 0.9995
-                console.log(this.frame)
+                // console.log(this.frame)
                 if (this.frame == 3 * this.framesDiff) {
                     this.frame = 0
                     // console.log('back')
@@ -167,11 +172,9 @@ export class BackgroundManager {
                 this.currentlinesSpeed -= this.linesSlow
                 this.framesCounter--
                 if (this.currentlinesSpeed <= 1) {
-                    this.lines = []
-                    this.createLines()
                     Game.state = 0
                     this.currentlinesSpeed = 1
-                    console.log(this.framesCounter)
+                    // console.log(this.framesCounter)
                 }
                 break
         }

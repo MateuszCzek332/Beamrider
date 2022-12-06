@@ -3,6 +3,7 @@ import { Bullet } from "./Bullet";
 
 export class PlayerController {
     canMove: boolean;
+    changeColor: boolean = true;
     color: number = 1;
     pos: number;
     x: number;
@@ -50,10 +51,6 @@ export class PlayerController {
                     if (this.xwidth == 0)
                         this.shoot(2)
                 }
-                // else if (event.isComposing || event.keyCode === 86) {
-                //     this.hp--
-                // }
-                // this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2 + this.pos * 12
             }
         });
     }
@@ -64,14 +61,14 @@ export class PlayerController {
 
     update = (c: CanvasRenderingContext2D) => {
         this.draw(c)
-        if (Game.state != 1) {
+        if (this.changeColor) {
             this.frame++
             if (this.frame == 20) {
                 this.changePlayerColor()
                 this.frame = 0
             }
         }
-        else if (Game.state == 1) {
+        if (Game.state == 1) {
             this.width += this.xwidth
             if (this.xwidth < 0 && this.width <= innerWidth / 2 + this.pos * this.wd - this.image.width / 2 + this.pos * 12) {
                 this.width = innerWidth / 2 + this.pos * this.wd - this.image.width / 2 + this.pos * 12
@@ -113,6 +110,19 @@ export class PlayerController {
 
     start = () => {
         this.canMove = true
+        this.changeColor = false
+        this.image.src = "./gfx/player/player1.PNG"
+        this.color = 1
+    }
+
+    block = () => {
+        this.canMove = false;
+    }
+
+    reset = () => {
+        this.canMove = false;
+        this.changeColor = true;
+        this.pos = 0;
         this.image.src = "./gfx/player/player1.PNG"
         this.color = 1
     }

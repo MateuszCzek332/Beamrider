@@ -23,7 +23,7 @@ export class Game {
         this.c = Game.canvas.getContext('2d')
         this.playerController = new PlayerController(630)
         this.bgManager = new BackgroundManager(6, 115, 1.01, 27, this.playerController.start)
-        this.lvlController = new LevelController()
+        this.lvlController = new LevelController(this.start, this.stop)
         this.ui = new Ui()
         this.createFPS()
         this.animate()
@@ -38,9 +38,7 @@ export class Game {
         this.bgManager.update(this.c)
         this.playerController.update(this.c)
         this.lvlController.update(this.c, this.playerController)
-        this.ui.update(this.c, this.playerController.ammo, this.playerController.hp)
-
-
+        this.ui.update(this.c, this.playerController.ammo, this.playerController.hp, this.lvlController.currEnemysToKill, this.lvlController.sector, this.lvlController.points)
     }
 
     onKeyDown = (event: KeyboardEvent) => {
@@ -55,14 +53,35 @@ export class Game {
             this.bgManager.pause()
         }
         else if (event.isComposing || event.keyCode === 65) {
-            Game.state = 2
-            this.bgManager.start()
+            this.start()
         }
         else if (event.isComposing || event.keyCode === 70) {
-            Game.state = 4
-            this.bgManager.stop()
+            this.stop()
         }
 
+    }
+
+    start = () => {
+        Game.state = 2
+        this.bgManager.start()
+        setTimeout(() => {
+            this.lvlController.startLv()
+            // this.playerController.start()
+        }, 3500)
+    }
+
+    stop = () => {
+        Game.state = 4
+        this.bgManager.stop()
+        this.playerController.block()
+        setTimeout(() => { this.reset() }, 2000)
+    }
+
+    reset = () => {
+        Game.state = 0
+        this.playerController.reset()
+        this.bgManager.reset()
+        this.lvlController.nextLv()
     }
 
     createFPS = () => {

@@ -7,7 +7,7 @@ export class Bullet {
     width: number;
     height: number;
     speed: number = 20;
-    type: number;
+    type: number;       // type 1 - normal, type=2 - special
     state: number = 1;
     spawnPos: number;
     bounty: number = 150;
@@ -59,7 +59,6 @@ export class Bullet {
             if (this.y < 70)
                 this.state = 0;
         }
-
 
     }
 

@@ -3,8 +3,11 @@ import { BossEnemy } from "./BossEnemy";
 import { Enemy } from "./Enemy";
 import { PlayerController } from "./PlayerController";
 import { Ufo } from "./UfoEnemy";
+import { BossShipEnemy } from "./BossShipEnemy";
+import { Star } from "./Star";
 
 export class LevelController {
+    stars: Star[][] = [];
     sector: number = 1;
     points: number = 0;
     maxEnemysToKill: number = 4;
@@ -14,9 +17,11 @@ export class LevelController {
     stop: any
     bossFight: boolean = false;
     boss: BossEnemy = null;
-    constructor(start: any, stop: any) {
+    bossBackup: BossShipEnemy[] = [];
+    constructor(start: any, stop: any, stars: Star[][]) {
         this.start = () => { start() }
         this.stop = () => { stop() }
+        this.stars = stars;
     }
 
     draw = (c: CanvasRenderingContext2D, player: PlayerController) => {
@@ -27,6 +32,21 @@ export class LevelController {
         this.draw(c, player)
 
         if (this.bossFight) {
+
+            for (let i = 0; i < this.bossBackup.length; i++) {
+                if (this.bossBackup[i] == null)
+                    continue;
+
+                if (this.bossBackup[i].state == 1)
+                    this.bossBackup[i].update(c, player.bullet)
+                else {
+                    this.bossBackup[i] = null
+                    setTimeout(() => {
+                        this.bossBackup[i] = new BossShipEnemy(this.stars)
+                    }, 3000)
+                }
+            }
+
             if (this.boss.state == 1)
                 this.boss.update(c, player.bullet)
             else if (this.boss.state == 0) {
@@ -62,6 +82,11 @@ export class LevelController {
 
     startBossFight = () => {
         this.boss = new BossEnemy()
+        for (let i = 0; i < 3; i++) {
+            this.bossBackup[i] = new BossShipEnemy(this.stars)
+        }
+        console.log(this.bossBackup)
+        console.log(this.stars)
         this.bossFight = true;
     }
 

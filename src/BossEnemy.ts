@@ -6,6 +6,7 @@ export class BossEnemy extends Enemy {
         super("./gfx/enemys/boss/ufo.PNG")
         this.x = 0;
         this.y = 115;
+        this.speed = 1;
         this.state = 1
     }
 

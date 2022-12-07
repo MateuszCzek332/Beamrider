@@ -35,4 +35,10 @@ export abstract class Enemy {
         return bullet != null && bullet.y + bullet.yd < this.y + this.yd + this.height && bullet.x + bullet.xd < this.x + this.xd + this.width && bullet.x + bullet.xd + this.width > this.x + this.xd;
     }
 
+    getRandomInt(min: number, max: number) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
 }

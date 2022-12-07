@@ -23,7 +23,7 @@ export class Game {
         this.c = Game.canvas.getContext('2d')
         this.playerController = new PlayerController(630)
         this.bgManager = new BackgroundManager(6, 115, 1.01, 27, this.playerController.start)
-        this.lvlController = new LevelController(this.start, this.stop)
+        this.lvlController = new LevelController(this.start, this.stop, this.bgManager.starsTab)
         this.ui = new Ui()
         this.createFPS()
         this.animate()

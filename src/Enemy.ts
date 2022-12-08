@@ -1,4 +1,5 @@
 import { Bullet } from "./Bullet";
+import { GameObject } from "./gameObject";
 export abstract class Enemy {
     image: HTMLImageElement;
     imageState: number = 1;
@@ -31,8 +32,8 @@ export abstract class Enemy {
         this.state = 0;
     }
 
-    checkColision = (bullet: Bullet) => {
-        return bullet != null && bullet.y + bullet.yd < this.y + this.yd + this.height && bullet.x + bullet.xd < this.x + this.xd + this.width && bullet.x + bullet.xd + this.width > this.x + this.xd;
+    checkColision = (gm: GameObject) => {
+        return gm != null && gm.y + gm.yd < this.y + this.yd + this.height && gm.y + gm.yd + gm.height > this.y + this.yd && gm.x + gm.xd < this.x + this.xd + this.width && gm.x + gm.xd + this.width > this.x + this.xd;
     }
 
     getRandomInt(min: number, max: number) {

@@ -1,5 +1,6 @@
 import { Bullet } from "./Bullet";
 import { Enemy } from "./Enemy";
+import Helpers from "./Helpers";
 
 export class BossEnemy extends Enemy {
     constructor() {
@@ -14,7 +15,7 @@ export class BossEnemy extends Enemy {
         this.draw(c)
         this.x += this.speed
 
-        if (this.checkColision(playerBullet)) {
+        if (Helpers.checkCollision(this, playerBullet)) {
             playerBullet.stop()
             this.die()
         }

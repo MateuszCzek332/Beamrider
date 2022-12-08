@@ -6,13 +6,21 @@ export class Ui {
         this.w = innerWidth
         this.h = innerHeight
     }
-    update = (c: CanvasRenderingContext2D, ammo: number, hp: number, enemyToKill: number, sector: number, points: number) => {
+    update = (c: CanvasRenderingContext2D, ammo: number, hp: number, enemyToKill: number, sector: number, points: number, gameOver: boolean) => {
         this.c = c;
         this.drawAmmo(ammo)
         this.drawHp(hp)
         this.drawEnemysToKill(enemyToKill)
         this.drawPoinst(points)
         this.drawLv(sector)
+        if (gameOver)
+            this.drawGameOver()
+    }
+
+    drawGameOver = () => {
+        this.c.font = "70px Arial";
+        this.c.fillStyle = "red";
+        this.c.fillText('GAME OVER', innerWidth / 2 - 215, innerHeight / 2 - 50)
     }
 
     drawEnemysToKill = (enemys: number) => {

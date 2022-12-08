@@ -1,19 +1,21 @@
 import { Bullet } from "./Bullet";
 import { Enemy } from "./Enemy";
+import Helpers from "./Helpers";
+import { PlayerController } from "./PlayerController";
 import { Star } from "./Star";
 // const attack = [
 //     { comand: 'goToRandom' },
 //     { comand: 'goStraight' },
 //     { comand: 'die' },
 // ]
-export class BossShipEnemy extends Enemy {
+export class BossShipEnemy extends Enemy { //state 1-alive 0-dead -1-die from hiting player
     vecX: number;
     vecY: number;
     targetX: number;
     targetY: number;
     posX: number;
     posY: number;
-    speed: number = 2;
+    speed: number = 5;
     attack: any;
     constructor(public stars: Star[][]) {
         super("./gfx/enemys/boss/1.PNG")
@@ -26,14 +28,18 @@ export class BossShipEnemy extends Enemy {
         this.readComand()
     }
 
-    update = (c: CanvasRenderingContext2D, playerBullet: Bullet) => {
+    update = (c: CanvasRenderingContext2D, player: PlayerController) => {
         this.draw(c)
 
         this.x += this.vecX
         this.y += this.vecY
 
-        if (this.checkColision(playerBullet)) {
-            this.getBullet(playerBullet)
+        if (Helpers.checkCollision(this, player)) {
+            this.hitPlayer()
+        }
+
+        if (Helpers.checkCollision(this, player.bullet)) {
+            this.getBullet(player.bullet)
         }
 
         if (this.reachtarget()) {
@@ -46,6 +52,11 @@ export class BossShipEnemy extends Enemy {
         if (bullet.type == 2)
             this.die()
         bullet.stop()
+    }
+
+    hitPlayer = () => {
+        this.state = -1
+        this.vecX = this.vecY = 0;
     }
 
     nextMove = () => {
@@ -78,7 +89,6 @@ export class BossShipEnemy extends Enemy {
     }
 
     die = () => {
-        console.log('*')
         this.state = this.vecX = this.vecY = 0;
     };
 

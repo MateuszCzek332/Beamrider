@@ -38,12 +38,20 @@ export class LevelController {
                     continue;
 
                 if (this.bossBackup[i].state == 1)
-                    this.bossBackup[i].update(c, player.bullet)
+                    this.bossBackup[i].update(c, player)
+                else if (this.bossBackup[i].state == -1) {
+                    this.bossBackup[i] = null;
+                    this.bossFight = false
+                    this.boss = null
+                    player.die()
+                    this.stop()
+                    return
+                }
                 else {
                     this.bossBackup[i] = null
                     setTimeout(() => {
                         this.bossBackup[i] = new BossShipEnemy(this.stars)
-                    }, 3000)
+                    }, 2000)
                 }
             }
 

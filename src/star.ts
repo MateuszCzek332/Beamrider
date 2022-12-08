@@ -11,11 +11,4 @@ export class Star {
         c.fillStyle = "rgb(56,104,144)";
         c.fillRect(this.x, this.y, 14, 5)
     }
-
-    update = (c: CanvasRenderingContext2D) => {
-        // this.draw(c)
-        // this.y *= this.speed
-        // if (this.y >= this.botBounty)
-        //     this.y = this.spawnPos
-    }
 }

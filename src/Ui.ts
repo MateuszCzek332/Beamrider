@@ -6,6 +6,7 @@ export class Ui {
         this.w = innerWidth
         this.h = innerHeight
     }
+
     update = (c: CanvasRenderingContext2D, ammo: number, hp: number, enemyToKill: number, sector: number, points: number, gameOver: boolean) => {
         this.c = c;
         this.drawAmmo(ammo)
@@ -42,7 +43,6 @@ export class Ui {
         this.c.fillText('SECTOR 0' + sector.toString(), innerWidth / 2 - 80, 70)
     }
 
-
     drawAmmo = (ammo: number) => {
         this.c.fillStyle = "purple";
         let x = this.w - 70
@@ -59,8 +59,4 @@ export class Ui {
             this.c.drawImage(image, x, this.h - 50);
 
     }
-
-
 }
-
-

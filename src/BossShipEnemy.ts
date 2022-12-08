@@ -3,28 +3,17 @@ import { Enemy } from "./Enemy";
 import Helpers from "./Helpers";
 import { PlayerController } from "./PlayerController";
 import { Star } from "./Star";
-// const attack = [
-//     { comand: 'goToRandom' },
-//     { comand: 'goStraight' },
-//     { comand: 'die' },
-// ]
+const attack = [
+    { comand: 'goToRandom' },
+    { comand: 'goStraight' },
+    { comand: 'die' },
+]
 export class BossShipEnemy extends Enemy { //state 1-alive 0-dead -1-die from hiting player
-    vecX: number;
-    vecY: number;
-    targetX: number;
-    targetY: number;
-    posX: number;
-    posY: number;
-    speed: number = 5;
-    attack: any;
     constructor(public stars: Star[][]) {
         super("./gfx/enemys/boss/1.PNG")
-        this.attack = [
-            { comand: 'goToRandom' },
-            { comand: 'goStraight' },
-            { comand: 'die' },
-        ]
-        this.state = 1
+        this.attack = [...attack]
+        this.state = 1;
+        this.speed = 5;
         this.readComand()
     }
 
@@ -64,33 +53,17 @@ export class BossShipEnemy extends Enemy { //state 1-alive 0-dead -1-die from hi
         this.readComand()
     }
 
-    reachtarget = () => {
-        if (this.vecY < 0 && this.y < this.targetY) {
-            return true;
-        }
-        else if (this.vecY > 0 && this.y > this.targetY) {
-            return true;
-        }
-        else if (this.vecX < 0 && this.x < this.targetX) {
-            return true;
-        }
-        else if (this.vecX > 0 && this.x > this.targetX) {
-            return true;
-        }
-        return false;
-    }
-
-    getRandomPosition = () => {
-        this.posX = this.getRandomInt(1, 5)
-        this.posY = this.getRandomInt(5, 7)
-        let pos = this.stars[this.posX][this.posY]
-        this.targetX = pos.x
-        this.y = this.targetY = pos.y
-    }
-
     die = () => {
         this.state = this.vecX = this.vecY = 0;
     };
+
+    getRandomPosition = () => {
+        this.posX = Helpers.getRandomInt(1, 5)
+        this.posY = Helpers.getRandomInt(5, 7)
+        let pos = this.stars[this.posX][this.posY]
+        this.targetX = pos.x
+        this.targetY = pos.y
+    }
 
     readComand = () => {
         let pos;
@@ -104,8 +77,9 @@ export class BossShipEnemy extends Enemy { //state 1-alive 0-dead -1-die from hi
                     this.x = 100
                 else
                     this.x = innerWidth - 100
+                this.y = this.targetY
                 vecX = this.targetX - this.x
-                vecY = this.targetY - this.y
+                vecY = 0
                 d = Math.sqrt(Math.pow(vecX, 2) + Math.pow(vecY, 2)) / this.speed
                 this.vecX = vecX / d
                 this.vecY = vecY / d

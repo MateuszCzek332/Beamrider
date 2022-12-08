@@ -1,5 +1,6 @@
-import { Bullet } from "./Bullet";
-import { GameObject } from "./gameObject";
+import Helpers from "./Helpers";
+import { Star } from "./Star";
+
 export abstract class Enemy {
     image: HTMLImageElement;
     imageState: number = 1;
@@ -11,6 +12,16 @@ export abstract class Enemy {
     height: number;
     speed: number = 3;
     state: number = 1;
+    //1=zyje(update)  0=nie zyje(delete) -1=zabil gracza(stop lv) -2=nie zyje ale jego posiski jeszcze istnieja(display bullets)
+    vecX: number;
+    vecY: number;
+    targetX: number;
+    targetY: number;
+    posX: number;
+    posY: number;
+    attack: any;
+
+    stars: Star[][]
     constructor(src: string) {
         this.image = new Image;
         this.image.src = src
@@ -27,19 +38,25 @@ export abstract class Enemy {
         c.drawImage(this.image, this.x + this.xd, this.y + this.yd);
     }
 
+    reachtarget = () => {
+        if (this.vecY < 0 && this.y < this.targetY) {
+            return true;
+        }
+        else if (this.vecY > 0 && this.y > this.targetY) {
+            return true;
+        }
+        else if (this.vecX < 0 && this.x < this.targetX) {
+            return true;
+        }
+        else if (this.vecX > 0 && this.x > this.targetX) {
+            return true;
+        }
+        return false;
+    }
+
     die = () => {
         this.speed = 0
         this.state = 0;
-    }
-
-    checkColision = (gm: GameObject) => {
-        return gm != null && gm.y + gm.yd < this.y + this.yd + this.height && gm.y + gm.yd + gm.height > this.y + this.yd && gm.x + gm.xd < this.x + this.xd + this.width && gm.x + gm.xd + this.width > this.x + this.xd;
-    }
-
-    getRandomInt(min: number, max: number) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
 }

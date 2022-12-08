@@ -5,6 +5,7 @@ import { PlayerController } from "./PlayerController";
 import { Ufo } from "./UfoEnemy";
 import { BossShipEnemy } from "./BossShipEnemy";
 import { Star } from "./Star";
+import Helpers from "./Helpers";
 
 export class LevelController {
     stars: Star[][] = [];
@@ -67,18 +68,18 @@ export class LevelController {
         else {
             for (let i = 0; i < this.ufoEnemys.length; i++) {
                 if (this.ufoEnemys[i].state == 1) {
-                    this.ufoEnemys[i].update(c, player.bullet)
-
+                    this.ufoEnemys[i].update(c, player)
                 }
                 if (this.ufoEnemys[i].state == 0) {
                     player.bullet = null
                     this.currEnemysToKill--
                     this.points += 44
-                    if (this.currEnemysToKill > 0)
-                        this.ufoEnemys[i] = new Ufo()
+                    if (this.currEnemysToKill > 2)
+                        this.ufoEnemys[i] = new Ufo(this.stars)
                     else {
                         this.ufoEnemys.splice(i, 1)
-                        this.startBossFight()
+                        if (this.currEnemysToKill == 0)
+                            this.startBossFight()
                         // this.stop()
                     }
 
@@ -93,8 +94,6 @@ export class LevelController {
         for (let i = 0; i < 3; i++) {
             this.bossBackup[i] = new BossShipEnemy(this.stars)
         }
-        console.log(this.bossBackup)
-        console.log(this.stars)
         this.bossFight = true;
     }
 
@@ -108,6 +107,8 @@ export class LevelController {
     }
 
     spawnEnemy = () => {
-        this.ufoEnemys.push(new Ufo())
+        setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(1, 500))
+        setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(300, 700))
+        setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(600, 1000))
     }
 }

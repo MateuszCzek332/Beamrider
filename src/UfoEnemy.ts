@@ -1,27 +1,57 @@
 import { Bullet } from "./Bullet";
+import { EnemyBullet } from "./EnemyBullet";
 import { Enemy } from "./Enemy";
+import Helpers from "./Helpers";
+import { PlayerController } from "./PlayerController";
+import { Star } from "./Star";
+
+const attacks = [
+    [
+        // { comand: 'goRandomX' },
+        // { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        // { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goBack' },
+
+    ],
+    // [
+    //     { comand: 'goRandomX' },
+    //     { comand: 'goToRandom' },
+    //     { comand: 'goToRandom' },
+    // ],
+]
 
 export class Ufo extends Enemy {
-    constructor() {
+    maxAttack: number
+    bullet: EnemyBullet = null;
+    constructor(public stars: Star[][]) {
         super("./gfx/enemys/ufo1/1.PNG")
         this.x = innerWidth / 2;
         this.y = 115;
         this.state = 1
+        this.maxAttack = 0;
+        this.attack = [...attacks[Helpers.getRandomInt(0, this.maxAttack)]]
+        this.speed = 4;
+        this.readComand()
     }
 
-    update = (c: CanvasRenderingContext2D, playerBullet: Bullet) => {
+    update = (c: CanvasRenderingContext2D, player: PlayerController) => {
         this.draw(c)
-        this.y += this.speed
 
-        if (this.y > 500 || this.y < 115)
-            this.speed = -this.speed
+        this.x += this.vecX
+        this.y += this.vecY
 
-
-        if (this.checkColision(playerBullet)) {
+        if (Helpers.checkCollision(this, player.bullet)) {
             this.die()
-            playerBullet.stop()
+            player.bullet.stop()
         }
 
+        if (this.reachtarget()) {
+            this.nextMove()
+        }
+        this.updateBullets(c, player)
 
         switch (true) {
             case this.y < 150 && this.image.src != "./gfx/enemys/ufo1/1.PNG":
@@ -42,5 +72,84 @@ export class Ufo extends Enemy {
         }
 
     }
+
+    updateBullets = (c: CanvasRenderingContext2D, player: PlayerController) => {
+        if (this.bullet != null)
+            this.bullet.update(c)
+    }
+
+    hitPlayer = () => {
+        this.state = -1
+        this.vecX = this.vecY = 0;
+    }
+
+    nextMove = () => {
+        if (this.attack.length > 1) {
+            this.attack.shift()
+            this.readComand()
+        }
+        else {
+            this.attack = [...attacks[Helpers.getRandomInt(0, this.maxAttack)]]
+            this.readComand()
+        }
+    }
+
+    getRandomPosition = () => {
+        this.posX = Helpers.getRandomInt(1, 5)
+        this.posY = Helpers.getRandomInt(2, 8)
+        let pos = this.stars[this.posX][this.posY]
+        this.targetX = pos.x
+        this.targetY = pos.y
+    }
+
+    shoot = () => {
+        this.bullet = new EnemyBullet(this.posX - 3, this.x, this.y)
+    }
+
+    readComand = () => {
+        let vecX;
+        let vecY;
+        let d;
+        let pos;
+        switch (this.attack[0].comand) {
+            case 'goRandomX':
+                this.speed = 3
+                this.targetY = this.y
+                this.targetX = Helpers.getRandomInt(200, innerWidth - 200)
+                vecX = this.targetX - this.x
+                vecY = 0
+                d = Math.sqrt(Math.pow(vecX, 2) + Math.pow(vecY, 2)) / this.speed
+                this.vecX = vecX / d
+                this.vecY = vecY / d
+                break;
+            case 'goToRandom':
+                this.getRandomPosition()
+                vecX = this.targetX - this.x
+                vecY = this.targetY - this.y
+                d = Math.sqrt(Math.pow(vecX, 2) + Math.pow(vecY, 2)) / this.speed
+                this.vecX = vecX / d
+                this.vecY = vecY / d
+                break;
+            case 'goBack':
+                this.speed = 5
+                pos = this.stars[this.posX][this.stars[this.posX].length - 1]
+                vecX = pos.x - this.x
+                vecY = pos.y - this.y
+                d = Math.sqrt(Math.pow(vecX, 2) + Math.pow(vecY, 2)) / this.speed
+                this.vecX = vecX / d
+                this.vecY = vecY / d
+                this.targetX = pos.x + 2 * vecX;
+                this.targetY = 115;
+                break;
+            case 'shoot':
+                this.shoot()
+                this.nextMove()
+                break;
+            case 'die':
+                this.die()
+                break;
+        }
+    }
+
 
 }

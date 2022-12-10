@@ -13,6 +13,8 @@ const attacks = [
         { comand: 'goToRandom' },
         // { comand: 'goToRandom' },
         { comand: 'shoot' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
         { comand: 'goBack' },
 
     ],
@@ -25,7 +27,7 @@ const attacks = [
 
 export class Ufo extends Enemy {
     maxAttack: number
-    bullet: EnemyBullet = null;
+    bullet: EnemyBullet[] = [];
     constructor(public stars: Star[][]) {
         super("./gfx/enemys/ufo1/1.PNG")
         this.x = innerWidth / 2;
@@ -44,8 +46,14 @@ export class Ufo extends Enemy {
         this.y += this.vecY
 
         if (Helpers.checkCollision(this, player.bullet)) {
-            this.die()
-            player.bullet.stop()
+            if (this.bullet.length == 0) {
+                this.die()
+                player.bullet.stop()
+            }
+            else {
+                this.speed = 0;
+                this.state = 2
+            }
         }
 
         if (this.reachtarget()) {
@@ -74,12 +82,29 @@ export class Ufo extends Enemy {
     }
 
     updateBullets = (c: CanvasRenderingContext2D, player: PlayerController) => {
-        if (this.bullet != null)
-            this.bullet.update(c)
+        for (let i = 0; i < this.bullet.length; i++) {
+            if (this.bullet[i].state == 1) {
+                this.bullet[i].update(c)
+                if (Helpers.checkCollision(this.bullet[i], player))
+                    this.shootPlayer()
+            }
+            else {
+                this.bullet.splice(i, 1)
+                i--
+            }
+        }
+
+        if (this.state == 2 && this.bullet == null)
+            this.die()
     }
 
     hitPlayer = () => {
         this.state = -1
+        this.vecX = this.vecY = 0;
+    }
+
+    shootPlayer = () => {
+        this.state = -2
         this.vecX = this.vecY = 0;
     }
 
@@ -103,7 +128,7 @@ export class Ufo extends Enemy {
     }
 
     shoot = () => {
-        this.bullet = new EnemyBullet(this.posX - 3, this.x, this.y)
+        this.bullet.push(new EnemyBullet(this.posX - 3, this.x, this.y))
     }
 
     readComand = () => {

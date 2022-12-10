@@ -12,7 +12,7 @@ export abstract class Enemy {
     height: number;
     speed: number = 3;
     state: number = 1;
-    //1=zyje(update)  0=nie zyje(delete) -1=zabil gracza(stop lv) -2=nie zyje ale jego posiski jeszcze istnieja(display bullets)
+    //1=zyje(update)  0=nie zyje(delete) -1=zabil przez kamikadze -2=zabil przez zestrzelenie 2=(enemy nie zyje ale)narysuj pociski
     vecX: number;
     vecY: number;
     targetX: number;

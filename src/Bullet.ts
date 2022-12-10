@@ -9,8 +9,6 @@ export class Bullet {
     speed: number = 20;
     type: number;       // type 1 - normal, type=2 - special
     state: number = 1;
-    spawnPos: number;
-    bounty: number = 150;
     r: number;
     constructor(posX: number, y: number, type: number) {
         this.type = type;

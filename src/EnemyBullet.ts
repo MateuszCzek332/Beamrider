@@ -9,14 +9,16 @@ export class EnemyBullet {
     speed: number = 10;
     state: number = 1;
     r: number;
-    constructor(posX: number, x: number, y: number) {
+    constructor(public posX: number, x: number, y: number) {
         this.x = x
         this.y = y
+        // this.r = 0
         this.r = posX * 3.5
         this.image = new Image;
         this.image.src = "./gfx/bullets/enemy/1.PNG";
         this.image.onload = () => {
             this.yd = -this.image.height
+            this.xd = 0
             this.width = this.image.width;
             this.height = this.image.height;
         }

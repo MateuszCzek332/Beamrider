@@ -9,6 +9,7 @@ export class Game {
     static canvas: HTMLCanvasElement;
     static state: number = 0;
     gameOver: boolean = false;
+    nextLv: boolean = true;
     //controllers
     bgManager: BackgroundManager;
     playerController: PlayerController;
@@ -24,7 +25,7 @@ export class Game {
         this.c = Game.canvas.getContext('2d')
         this.playerController = new PlayerController(630)
         this.bgManager = new BackgroundManager(6, 115, 1.01, 27, this.playerController.start)
-        this.lvlController = new LevelController(this.start, this.stop, this.bgManager.starsTab)
+        this.lvlController = new LevelController(this.start, this.stop, this.stopLv, this.bgManager.starsTab)
         this.ui = new Ui()
         this.createFPS()
         this.animate()
@@ -43,13 +44,16 @@ export class Game {
     }
 
     onKeyDown = (event: KeyboardEvent) => {
-        //Background 
+
         if (event.isComposing || event.keyCode === 83) {
             if (!this.gameOver) {
                 Game.state = 1
                 this.bgManager.unpause()
                 this.playerController.start()
-                this.lvlController.startLv()
+                if (this.nextLv)
+                    this.lvlController.startLv()
+                else
+                    this.lvlController.continuetLv()
             }
         }
         else if (event.isComposing || event.keyCode === 68) {
@@ -70,8 +74,12 @@ export class Game {
     start = () => {
         Game.state = 2
         this.bgManager.start()
+        console.log(this.nextLv)
         setTimeout(() => {
-            this.lvlController.startLv()
+            if (this.nextLv)
+                this.lvlController.startLv()
+            else
+                this.lvlController.continuetLv()
             // this.playerController.start()
         }, 3500)
     }
@@ -86,7 +94,25 @@ export class Game {
             this.gameOver = true
     }
 
+    stopLv = () => {
+        Game.state = 4
+        this.bgManager.stop()
+        this.playerController.block()
+        if (this.playerController.hp > 0)
+            setTimeout(() => { this.continueLv() }, 2000)
+        else
+            this.gameOver = true
+    }
+
+    continueLv = () => {
+        Game.state = 0
+        this.playerController.reset()
+        this.bgManager.reset()
+        this.nextLv = false
+    }
+
     reset = () => {
+        this.nextLv = true;
         Game.state = 0
         this.playerController.reset()
         this.bgManager.reset()

@@ -16,12 +16,14 @@ export class LevelController {
     ufoEnemys: Ufo[] = [];
     start: any
     stop: any
+    stopLv: any
     bossFight: boolean = false;
     boss: BossEnemy = null;
     bossBackup: BossShipEnemy[] = [];
-    constructor(start: any, stop: any, stars: Star[][]) {
+    constructor(start: any, stop: any, stopLv: any, stars: Star[][]) {
         this.start = () => { start() }
         this.stop = () => { stop() }
+        this.stopLv = () => { stopLv() }
         this.stars = stars;
     }
 
@@ -33,7 +35,6 @@ export class LevelController {
         this.draw(c, player)
 
         if (this.bossFight) {
-
             for (let i = 0; i < this.bossBackup.length; i++) {
                 if (this.bossBackup[i] == null)
                     continue;
@@ -67,23 +68,35 @@ export class LevelController {
         }
         else {
             for (let i = 0; i < this.ufoEnemys.length; i++) {
-                if (this.ufoEnemys[i].state == 1) {
-                    this.ufoEnemys[i].update(c, player)
-                }
-                if (this.ufoEnemys[i].state == 0) {
-                    player.bullet = null
-                    this.currEnemysToKill--
-                    this.points += 44
-                    if (this.currEnemysToKill > 2)
-                        this.ufoEnemys[i] = new Ufo(this.stars)
-                    else {
-                        this.ufoEnemys.splice(i, 1)
-                        if (this.currEnemysToKill == 0)
-                            this.startBossFight()
-                        // this.stop()
-                    }
+
+                switch (this.ufoEnemys[i].state) {
+                    case 2:
+                        this.ufoEnemys[i].updateBullets(c, player)
+                        break
+                    case 1:
+                        this.ufoEnemys[i].update(c, player)
+                        break
+                    case 0:
+                        player.bullet = null
+                        this.currEnemysToKill--
+                        this.points += 44
+                        if (this.currEnemysToKill > 2)
+                            this.ufoEnemys[i] = new Ufo(this.stars)
+                        else {
+                            this.ufoEnemys.splice(i, 1)
+                            if (this.currEnemysToKill == 0)
+                                this.startBossFight()
+                            // this.stop()
+                        }
+                        break
+                    case -2:
+                        this.deleteEnemys()
+                        player.die()
+                        this.stopLv()
+                        break
 
                 }
+
             }
 
         }
@@ -105,6 +118,23 @@ export class LevelController {
         this.sector++
         this.currEnemysToKill = this.maxEnemysToKill
     }
+
+    deleteEnemys = () => {
+        this.ufoEnemys = []
+    }
+
+    continuetLv = () => {
+        console.log(this.currEnemysToKill)
+        if (this.currEnemysToKill >= 3) {
+            this.spawnEnemy()
+        }
+        else {
+            for (let i = 1; i <= this.currEnemysToKill; i++) {
+                this.ufoEnemys.push(new Ufo(this.stars))
+            }
+        }
+    }
+
 
     spawnEnemy = () => {
         setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(1, 500))

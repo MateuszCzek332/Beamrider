@@ -45,7 +45,7 @@ export class Ufo extends Enemy {
         this.x += this.vecX
         this.y += this.vecY
 
-        if (Helpers.checkCollision(this, player.bullet)) {
+        if (player.bullet != null && player.bullet.state != 0 && Helpers.checkCollision(this, player.bullet)) {
             if (this.bullet.length == 0) {
                 this.die()
                 player.bullet.stop()

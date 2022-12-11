@@ -5,7 +5,9 @@ import { PlayerController } from "./PlayerController";
 import { Ufo } from "./UfoEnemy";
 import { BossShipEnemy } from "./BossShipEnemy";
 import { Star } from "./Star";
+import { Hp } from "./Hp";
 import Helpers from "./Helpers";
+import { Asteroid } from "./Asteroid";
 
 export class LevelController {
     stars: Star[][] = [];
@@ -20,11 +22,15 @@ export class LevelController {
     bossFight: boolean = false;
     boss: BossEnemy = null;
     bossBackup: BossShipEnemy[] = [];
+    hpSpawnNr: number;
+    hp: Hp = null;
+    asteroids: Asteroid[] = []
     constructor(start: any, stop: any, stopLv: any, stars: Star[][]) {
         this.start = () => { start() }
         this.stop = () => { stop() }
         this.stopLv = () => { stopLv() }
         this.stars = stars;
+        this.hpSpawnNr = Helpers.getRandomInt(1, 3)
     }
 
     draw = (c: CanvasRenderingContext2D, player: PlayerController) => {
@@ -34,7 +40,7 @@ export class LevelController {
     update = (c: CanvasRenderingContext2D, player: PlayerController) => {
         this.draw(c, player)
 
-        if (this.bossFight) {
+        if (this.bossFight) { // walka z bossem
             for (let i = 0; i < this.bossBackup.length; i++) {
                 if (this.bossBackup[i] == null)
                     continue;
@@ -66,11 +72,54 @@ export class LevelController {
             }
 
         }
-        else {
+        else { // norlalny level
+            if (this.hp != null)
+                switch (this.hp.state) {
+                    case 2:
+                        player.addHP()
+                        this.hp = null
+                        break
+                    case 1:
+                        this.hp.update(c, player)
+                        break
+                    case 0:
+                        this.hp = null
+                        break
+                    case -1:
+                        this.deleteEnemys()
+                        player.die()
+                        this.stopLv()
+                        break
+                }
+
+            // for (let i = 0; i < this.asteroids.length; i++) {
+            //     this.asteroids[i].update(c, player)
+            // }
+
             for (let i = 0; i < this.ufoEnemys.length; i++) {
 
                 switch (this.ufoEnemys[i].state) {
+                    case 3:
+                        this.ufoEnemys[i].updateBullets(c, player)
+                        if (this.ufoEnemys[i].bullet.length == 0) {
+                            if (this.hpSpawnNr == this.currEnemysToKill)
+                                this.spawnHP()
+
+                            if (this.currEnemysToKill > 2)
+                                this.ufoEnemys[i] = new Ufo(this.stars)
+                            else {
+                                this.ufoEnemys.splice(i, 1)
+                                if (this.currEnemysToKill == 0)
+                                    this.startBossFight()
+                                // this.stop()
+                            }
+                        }
+                        break
                     case 2:
+                        player.bullet = null
+                        this.currEnemysToKill--
+                        this.points += 44
+                        this.ufoEnemys[i].state = 3
                         this.ufoEnemys[i].updateBullets(c, player)
                         break
                     case 1:
@@ -80,6 +129,9 @@ export class LevelController {
                         player.bullet = null
                         this.currEnemysToKill--
                         this.points += 44
+                        if (this.hpSpawnNr == this.currEnemysToKill)
+                            this.spawnHP()
+
                         if (this.currEnemysToKill > 2)
                             this.ufoEnemys[i] = new Ufo(this.stars)
                         else {
@@ -96,9 +148,7 @@ export class LevelController {
                         break
 
                 }
-
             }
-
         }
     }
 
@@ -120,7 +170,9 @@ export class LevelController {
     }
 
     deleteEnemys = () => {
+        this.hp = null
         this.ufoEnemys = []
+        this.asteroids = []
     }
 
     continuetLv = () => {
@@ -135,10 +187,29 @@ export class LevelController {
         }
     }
 
-
     spawnEnemy = () => {
+        this.spawnUfo()
+        this.spawnAsteroids()
+    }
+
+    spawnUfo = () => {
         setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(1, 500))
         setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(300, 700))
         setTimeout(() => this.ufoEnemys.push(new Ufo(this.stars)), Helpers.getRandomInt(600, 1000))
+    }
+
+    spawnAsteroids = () => {
+        let i = Helpers.getRandomInt(1, 5)
+        let pos = this.stars[i][this.stars[i].length - 1]
+        this.asteroids.push(new Asteroid(i - 3, pos.x, pos.y))
+        // console.log(pos.x, pos.y)
+    }
+
+    spawnHP = () => {
+        console.log('spawn Hp')
+        let i = Helpers.getRandomInt(1, 5)
+        let pos = this.stars[i][this.stars[i].length - 1]
+        this.hp = new Hp(i - 3, pos.x, pos.y)
+        // console.log(pos.x, pos.y)
     }
 }

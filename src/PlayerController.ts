@@ -94,6 +94,10 @@ export class PlayerController {
 
     }
 
+    addHP = () => {
+        this.hp++
+    }
+
     drawBullet = (c: CanvasRenderingContext2D) => {
         if (this.bullet == null)
             return;

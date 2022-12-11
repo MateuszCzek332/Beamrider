@@ -9,23 +9,31 @@ export class Asteroid {
     yd: number;
     width: number;
     height: number;
-    speed: number = 5;
+    speed: number = 0;
     state: number = 1;
-    r: number;
-    heal: boolean = true;
+    r: number = 0;
+    spawned: boolean = false
     constructor(public posX: number, x: number, y: number) {
         this.x = x
         this.y = y
-        this.r = posX * 1.8
         this.image = new Image;
-        this.image.src = "./gfx/enemys/asteroid/1.png";
+
+        setTimeout(() => this.spawn(), Helpers.getRandomInt(500, 5000))
+
         this.image.onload = () => {
             this.yd = -this.image.height
-            this.xd = -this.image.width / 4
+            this.xd = -this.image.width / 2
             this.width = this.image.width;
             this.height = this.image.height;
         }
 
+    }
+
+    spawn = () => {
+        this.image.src = "./gfx/enemys/asteroid/1.png";
+        this.speed = 3;
+        this.r = this.posX * 1.1
+        this.spawned = true
     }
 
     draw = (c: CanvasRenderingContext2D) => {
@@ -34,40 +42,39 @@ export class Asteroid {
 
     update = (c: CanvasRenderingContext2D, player: PlayerController) => {
         this.draw(c)
-        // this.y += this.speed
-        // this.x += this.r
+        this.y += this.speed
+        this.x += this.r
 
+        if (Helpers.checkCollision(this, player.bullet)) {
+            if (player.bullet.type == 2)
+                this.stop()
+            player.bullet.stop()
+        }
 
-        // if (Helpers.checkCollision(this, player.bullet)) {
-        //     this.setDead()
-        // }
-
-        // if (Helpers.checkCollision(this, player)) {
-        //     if (this.heal)
-        //         this.state = 2
-        //     else
-        //         this.state = -1
-        // }
+        if (Helpers.checkCollision(this, player)) {
+            this.stop()
+            this.state = -1
+        }
 
         if (this.y > innerHeight) {
             this.stop()
         }
 
-        // if (this.heal)
-        //     switch (true) {
-        //         case this.y < 150 && this.image.src != "./gfx/hp/4.PNG":
-        //             this.image.src = "./gfx/hp/4.PNG";
-        //             break
-        //         case this.y < 250 && this.image.src != "./gfx/hp/3.PNG":
-        //             this.image.src = "./gfx/hp/3.PNG";
-        //             break
-        //         case this.y < 400 && this.image.src != "./gfx/hp/2.PNG":
-        //             this.image.src = "./gfx/hp/2.PNG";
-        //             break
-        //         case this.image.src != "./gfx/hp/1.PNG":
-        //             this.image.src = "./gfx/hp/1.PNG";
-        //             break
-        //     }
+        if (this.spawned)
+            switch (true) {
+                case this.y < 150:
+                    this.image.src = "./gfx/enemys/asteroid/1.png";
+                    break
+                case this.y < 250:
+                    this.image.src = "./gfx/enemys/asteroid/2.png";
+                    break
+                case this.y < 400:
+                    this.image.src = "./gfx/enemys/asteroid/3.png";
+                    break
+                default:
+                    this.image.src = "./gfx/enemys/asteroid/4.png";
+                    break
+            }
     }
 
     stop = () => {

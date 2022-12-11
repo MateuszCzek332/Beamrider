@@ -92,9 +92,24 @@ export class LevelController {
                         break
                 }
 
-            // for (let i = 0; i < this.asteroids.length; i++) {
-            //     this.asteroids[i].update(c, player)
-            // }
+            for (let j = 0; j < this.asteroids.length; j++) {
+                switch (this.asteroids[j].state) {
+                    case 1:
+                        this.asteroids[j].update(c, player)
+                        break
+                    case 0:
+                        let i = Helpers.getRandomInt(1, 5)
+                        let pos = this.stars[i][this.stars[i].length - 1]
+                        this.asteroids[j] = new Asteroid(i - 3, pos.x, pos.y)
+                        break
+                    case -1:
+                        this.deleteEnemys()
+                        player.die()
+                        this.stopLv()
+                        break
+
+                }
+            }
 
             for (let i = 0; i < this.ufoEnemys.length; i++) {
 
@@ -109,8 +124,10 @@ export class LevelController {
                                 this.ufoEnemys[i] = new Ufo(this.stars)
                             else {
                                 this.ufoEnemys.splice(i, 1)
-                                if (this.currEnemysToKill == 0)
+                                if (this.currEnemysToKill == 0) {
+                                    this.deleteEnemys()
                                     this.startBossFight()
+                                }
                                 // this.stop()
                             }
                         }
@@ -136,8 +153,10 @@ export class LevelController {
                             this.ufoEnemys[i] = new Ufo(this.stars)
                         else {
                             this.ufoEnemys.splice(i, 1)
-                            if (this.currEnemysToKill == 0)
+                            if (this.currEnemysToKill == 0) {
+                                this.deleteEnemys()
                                 this.startBossFight()
+                            }
                             // this.stop()
                         }
                         break
@@ -189,7 +208,8 @@ export class LevelController {
 
     spawnEnemy = () => {
         this.spawnUfo()
-        this.spawnAsteroids()
+        if (this.sector >= 2)
+            this.spawnAsteroids()
     }
 
     spawnUfo = () => {
@@ -199,10 +219,12 @@ export class LevelController {
     }
 
     spawnAsteroids = () => {
-        let i = Helpers.getRandomInt(1, 5)
-        let pos = this.stars[i][this.stars[i].length - 1]
-        this.asteroids.push(new Asteroid(i - 3, pos.x, pos.y))
-        // console.log(pos.x, pos.y)
+        for (let j = 0; j < Helpers.getRandomInt(2, 3); j++) {
+            let i = Helpers.getRandomInt(1, 5)
+            let pos = this.stars[i][this.stars[i].length - 1]
+            this.asteroids.push(new Asteroid(i - 3, pos.x, pos.y))
+            // console.log(pos.x, pos.y)
+        }
     }
 
     spawnHP = () => {

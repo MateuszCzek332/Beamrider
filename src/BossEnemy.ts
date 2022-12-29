@@ -16,8 +16,9 @@ export class BossEnemy extends Enemy {
         this.x += this.speed
 
         if (Helpers.checkCollision(this, playerBullet)) {
-            playerBullet.stop()
-            this.die()
+            playerBullet.stop();
+            this.die();
+            this.state = -1;
         }
 
         if (this.x > innerWidth) {

@@ -111,7 +111,7 @@ export class PlayerController {
         if (this.bullet == null) {
             if (type == 2 && this.ammo > 0) {
                 this.bullet = new Bullet(this.pos, this.y + this.yd, 2)
-                // this.ammo--
+                this.ammo--
             }
             else if (type == 1) {
                 this.bullet = new Bullet(this.pos, this.y + this.yd, 1)
@@ -134,8 +134,9 @@ export class PlayerController {
         this.canMove = false;
         this.changeColor = true;
         this.pos = 0;
-        this.x = innerWidth / 2 + this.pos * this.wd
-        this.image.src = "./gfx/player/player1.PNG"
+        this.ammo = 3;
+        this.x = innerWidth / 2 + this.pos * this.wd;
+        this.image.src = "./gfx/player/player1.PNG";
         this.imageState = 1
     }
 

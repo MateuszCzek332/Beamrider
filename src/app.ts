@@ -29,9 +29,16 @@ export class Game {
         this.ui = new Ui()
         this.createFPS()
         this.animate()
-
+        this.loadFont()
         document.addEventListener("keydown", (e) => { this.onKeyDown(e) });
     }
+
+    loadFont = async () => {
+        let font = new FontFace("Atari", "url(./AtariClassic.ttf)");
+        const f = await font.load();
+        (document.fonts as any).add(f);
+        console.log("font loaded");
+    };
 
     animate = () => {
         requestAnimationFrame(this.animate)
@@ -71,7 +78,8 @@ export class Game {
 
     }
 
-    start = () => {
+    start = async () => {
+        await this.loadFont()
         Game.state = 2
         this.bgManager.start()
         console.log(this.nextLv)

@@ -7,22 +7,69 @@ import { Star } from "./Star";
 
 const attacks = [
     [
-        // { comand: 'goRandomX' },
-        // { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
         { comand: 'goRandomX' },
         { comand: 'goToRandom' },
-        // { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
         { comand: 'shoot' },
         { comand: 'goToRandom' },
         { comand: 'shoot' },
         { comand: 'goBack' },
 
     ],
-    // [
-    //     { comand: 'goRandomX' },
-    //     { comand: 'goToRandom' },
-    //     { comand: 'goToRandom' },
-    // ],
+    [
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goBack' },
+
+    ],
+    [
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'goBack' },
+
+    ],
+    [
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'goBack' },
+
+    ],
+    [
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'goBack' },
+
+    ],
+    [
+        { comand: 'goRandomX' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'goToRandom' },
+        { comand: 'shoot' },
+        { comand: 'goToRandom' },
+        { comand: 'goBack' },
+
+    ],
 ]
 
 export class Ufo extends Enemy {
@@ -33,9 +80,9 @@ export class Ufo extends Enemy {
         this.x = innerWidth / 2;
         this.y = 115;
         this.state = 1
-        this.maxAttack = 0;
+        this.maxAttack = 5;
         this.attack = [...attacks[Helpers.getRandomInt(0, this.maxAttack)]]
-        this.speed = 4;
+        this.speed = 6;
         this.readComand()
     }
 

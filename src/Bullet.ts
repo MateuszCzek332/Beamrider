@@ -41,7 +41,7 @@ export class Bullet {
         this.x += this.r
 
         if (this.type == 1) {
-            if (this.y < 180)
+            if (this.y < 220)
                 this.state = 0;
         }
         else if (this.type == 2) {

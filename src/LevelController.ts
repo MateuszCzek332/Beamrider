@@ -8,12 +8,13 @@ import { Star } from "./Star";
 import { Hp } from "./Hp";
 import Helpers from "./Helpers";
 import { Asteroid } from "./Asteroid";
+import { Pac } from "./Pac";
 
 export class LevelController {
     stars: Star[][] = [];
     sector: number = 1;
     points: number = 0;
-    maxEnemysToKill: number = 4;
+    maxEnemysToKill: number = 15;
     currEnemysToKill: number = this.maxEnemysToKill;
     ufoEnemys: Ufo[] = [];
     start: any
@@ -25,12 +26,13 @@ export class LevelController {
     hpSpawnNr: number;
     hp: Hp = null;
     asteroids: Asteroid[] = []
+    pac: Pac = null
     constructor(start: any, stop: any, stopLv: any, stars: Star[][]) {
         this.start = () => { start() }
         this.stop = () => { stop() }
         this.stopLv = () => { stopLv() }
         this.stars = stars;
-        this.hpSpawnNr = Helpers.getRandomInt(1, 3)
+        this.hpSpawnNr = Helpers.getRandomInt(5, 11)
     }
 
     draw = (c: CanvasRenderingContext2D, player: PlayerController) => {
@@ -62,7 +64,6 @@ export class LevelController {
                     }, 2000)
                 }
             }
-
             if (this.boss.state == 1)
                 this.boss.update(c, player.bullet)
             else if (this.boss.state == 0) {
@@ -70,9 +71,30 @@ export class LevelController {
                 this.boss = null
                 this.stop()
             }
-
+            else if (this.boss.state == -1) {
+                this.points += player.hp * 150
+                this.bossFight = false
+                this.boss = null
+                this.stop()
+            }
         }
         else { // norlalny level
+
+            if (this.pac != null)
+                switch (this.pac.state) {
+                    case 1:
+                        this.pac.update(c, player)
+                        break
+                    case 0:
+                        this.pac = null;
+                        break
+                    case 2:
+                        this.pac = null
+                        this.currEnemysToKill--
+                        this.points += 44
+                }
+
+
             if (this.hp != null)
                 switch (this.hp.state) {
                     case 2:
@@ -210,6 +232,8 @@ export class LevelController {
         this.spawnUfo()
         if (this.sector >= 2)
             this.spawnAsteroids()
+        if (this.sector >= 3)
+            this.spawnPac()
     }
 
     spawnUfo = () => {
@@ -225,6 +249,10 @@ export class LevelController {
             this.asteroids.push(new Asteroid(i - 3, pos.x, pos.y))
             // console.log(pos.x, pos.y)
         }
+    }
+
+    spawnPac = () => {
+        setTimeout(() => this.pac = new Pac(this.stars), Helpers.getRandomInt(3000, 10000))
     }
 
     spawnHP = () => {

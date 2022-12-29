@@ -19,26 +19,26 @@ export class Ui {
     }
 
     drawGameOver = () => {
-        this.c.font = "70px Arial";
+        this.c.font = "70px Atari";
         this.c.fillStyle = "red";
         this.c.fillText('GAME OVER', innerWidth / 2 - 215, innerHeight / 2 - 50)
     }
 
     drawEnemysToKill = (enemys: number) => {
-        this.c.font = "30px Arial";
+        this.c.font = "30px Atari";
         this.c.fillStyle = "rgb(80,124,56)";
         this.c.fillText(enemys.toString(), 10, 40)
     }
 
     drawPoinst = (points: number) => {
-        this.c.font = "30px Arial";
+        this.c.font = "30px Atari";
         this.c.fillStyle = "rgb(204,160,92)";
 
         this.c.fillText(points.toString(), innerWidth / 2, 40)
     }
 
     drawLv = (sector: number) => {
-        this.c.font = "30px Arial";
+        this.c.font = "30px Atari";
         this.c.fillStyle = "rgb(204,160,92)";
         this.c.fillText('SECTOR 0' + sector.toString(), innerWidth / 2 - 80, 70)
     }
